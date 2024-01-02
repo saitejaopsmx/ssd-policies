@@ -1,0 +1,32 @@
+{
+    "conditions": [
+        {
+            "condition_name": "C-0001",
+            "condition_value": "0"
+        }
+    ],
+    "metadata": {
+        "account_name": "dev",
+        "scan_type": "NSA-CISA",
+        "compliance_score": 8,
+        "results": [
+        {
+            "control_id": "C-0001",
+            "control_title": "Cluster-admin binding",
+                "failed_resources": [
+                "/rbac/ServiceAccount/default/rbac.authorization.k8s.io/v1/rbac/Role/spinnaker-role/rbac.authorization.k8s.io/v1/rbac/RoleBinding/ossrbac-spinnaker-spinnaker",
+                "/new4042/ServiceAccount/new-grafana/rbac.authorization.k8s.io/v1//ClusterRole/new-grafana-clusterrole/rbac.authorization.k8s.io/v1//ClusterRoleBinding/new-grafana-clusterrolebinding"
+                ]
+        },
+        {
+            "control_id": "C-0002",
+            "control_title": "Exec into container",
+                "failed_resources": [
+                "/new4041/ServiceAccount/new-grafana/rbac.authorization.k8s.io/v1//ClusterRole/new-grafana-clusterrole/rbac.authorization.k8s.io/v1//ClusterRoleBinding/new-grafana-clusterrolebinding"
+                ]
+        }
+
+        ]
+    }
+}
+
