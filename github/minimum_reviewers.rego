@@ -21,5 +21,5 @@ reviewers = response.body.required_pull_request_reviews.required_approving_revie
 
 deny[msg]{
   reviewers = 0 
-  msg := sprintf("There should be atleast 1 reviewer for Merging the code", [input.metadata.github_repo])
+  msg := sprintf("There should be atleast 1 reviewer in %s repo for Merging the code", [input.metadata.github_repo])
 }
