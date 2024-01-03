@@ -1,0 +1,15 @@
+{
+    "conditions": [
+        {
+            "condition_name": "allow_auto_merge",
+            "condition_value": false
+        }
+    ],
+    "metadata": {
+       "image": "alpine",
+       "imageTag": "latest",
+       "registryUser": "opsmx11",
+       "registryPass": "Network123!"
+    }
+}
+
