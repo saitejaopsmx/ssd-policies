@@ -17,11 +17,11 @@ request = {
 
 response = http.send(request)
 
-sai = response.body
+responsesplit = response.body
 
 admins = {user |
     some i
-    user = sai[i];
+    user = responsesplit[i];
     user.role_name == "admin"
 }
 
@@ -29,23 +29,11 @@ admin_users = count(admins)
 
 total = {user |
     some i
-    user = sai[i];
+    user = responsesplit[i];
     user.type == "User"
 }
 
 total_users = count(total)
-
-#count_admins = count(user) {
-#    some i
-#    user = sai[i]
-#    user.role_name == "admin"
-#}
-
-#total_users = count(user) {
-#    some i
-#    user = sai[i]
-#    user.role_name != a
-#}
 
 admin_percentage = admin_users / total_users
 
