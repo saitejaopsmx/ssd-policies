@@ -2,7 +2,7 @@
     "conditions": [
         {
             "condition_name": "MITRE - Compliance Score - Range: 50-70",
-            "condition_value": "30"
+            "condition_value": "70"
         }
     ],
     "metadata": {
