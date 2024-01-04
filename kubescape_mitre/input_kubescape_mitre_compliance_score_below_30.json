@@ -8,7 +8,7 @@
     "metadata": {
       "account_name": "prod",
       "scan_type": "MITRE",
-      "compliance_score": 25.64455,
+      "compliance_score": 45.64455,
       "results": [
         {
           "control_id": "C-0030",
