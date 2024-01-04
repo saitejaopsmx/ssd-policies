@@ -1,14 +1,14 @@
 {
     "conditions": [
         {
-            "condition_name": "MITRE - Compliance Score - Range: 0-30",
-            "condition_value": "30"
+            "condition_name": "MITRE - Compliance Score - Range: 30-50",
+            "condition_value": "30-50"
         }
     ],
     "metadata": {
       "account_name": "prod",
       "scan_type": "MITRE",
-      "compliance_score": 25.64455,
+      "compliance_score": 45.64455,
       "results": [
         {
           "control_id": "C-0030",
