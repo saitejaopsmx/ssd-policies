@@ -1,8 +1,8 @@
 {
     "conditions": [
         {
-            "condition_name": "CIS - Compliance Score - Range: 0-30",
-            "condition_value": "0-30"
+            "condition_name": "CIS - Compliance Score - Range: 30-50",
+            "condition_value": "30-50"
         }
     ],
     "metadata": {
