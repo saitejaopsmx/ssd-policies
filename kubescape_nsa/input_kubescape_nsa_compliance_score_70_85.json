@@ -1,8 +1,8 @@
 {
     "conditions": [
         {
-            "condition_name": "NSA - Compliance Score - Range: 0-30",
-            "condition_value": "30"
+            "condition_name": "NSA - Compliance Score - Range: 70-85",
+            "condition_value": "70-85"
         }
     ],
     "metadata": {
