@@ -4,7 +4,7 @@ severity = "high"
 
 request_components = [input.metadata.toolchain_addr,"api", "v1", "scanResult"]
 request_url = concat("/",request_components)
-filename_components = ["fileName=findings", input.metadata.github_org, input.metadata.github_repo, input.metadata.semgrep_severity, input.metadata.build_id, "semgrep.json"]
+filename_components = ["fileName=findings", input.metadata.github_org, input.metadata.github_repo, severity, input.metadata.build_id, "semgrep.json"]
 filename = concat("_", filename_components)
 
 complete_url = concat("?", [request_url, filename])
