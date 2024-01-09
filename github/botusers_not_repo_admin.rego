@@ -25,11 +25,10 @@ message = parsed_body.message
 
 result = response.body
 
-alllogins = {user |
+admins = {user |
     some i
     user = result[i];
-    user.permissions.admin == true
-    user.permissions.maintain == true
+    user.role_name == "admin"
 }
 
 bot_users = {"bot", "auto", "test", "jenkins", "drone", "github", "gitlab", "aws", "azure"}
@@ -60,9 +59,9 @@ deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
-  user = alllogins[_]
+  user = admins[_]
   user.login == bot_users[user.login]
-  msg = sprintf("Github users %v cannot merge the code", [user.login])
-  sugg := "Please remove the user from the Organisation since he is bot user"
+  msg = sprintf("Git repo is owned by unknown user %s", [user.login])
+  sugg := "Please remove that user from the organisation"
   error := ""
 }
