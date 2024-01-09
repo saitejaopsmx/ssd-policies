@@ -22,7 +22,6 @@ result = response.body
 alllogins = {user |
     some i
     user = result[i];
-    #user.role_name == "admin"
     user.permissions.admin == true
     user.permissions.maintain == true
 }
