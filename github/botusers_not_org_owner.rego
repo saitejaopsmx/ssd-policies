@@ -2,7 +2,7 @@ package opsmx
 
 default allow = false
 
-request_components = [input.metadata.rest_url,"repos", input.metadata.github_org, input.metadata.github_repo, "collaborators?affiliation=direct"]
+request_components = [input.metadata.rest_url, "orgs", input.metadata.github_org, "members?role=admin"]
 request_url = concat("/",request_components)
 
 token = input.metadata.github_access_token
@@ -25,14 +25,13 @@ message = parsed_body.message
 
 result = response.body
 
-alllogins = {user |
+users = {user |
     some i
     user = result[i];
-    user.permissions.admin == true
-    user.permissions.maintain == true
+    user.type == "User"
 }
 
-bot_users = {"bot", "auto", "test", "jenkins", "drone", "github", "gitlab", "aws", "azure"}
+org_users = {"bot", "auto", "test", "jenkins", "drone", "github", "gitlab", "aws", "azure"}
 
 allow {
   response.status_code = 200
@@ -60,9 +59,9 @@ deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
-  user = alllogins[_]
-  user.login == bot_users[user.login]
-  msg = sprintf("Github users %v cannot merge the code", [user.login])
-  sugg := "Please remove the user from the Organisation since he is bot user"
+  user = users[_]
+  user.login == org_users[user.login]
+  msg = sprintf("GitHub Organisation is accessed by '%v' which is not allowed.", [user.login])
+  sugg := "GitHub Organisation is owned by other unknown user"
   error := ""
 }
