@@ -1,0 +1,23 @@
+{
+  "conditions": [
+    {
+      "condition_name": "Binary-Artifacts",
+      "condition_value": "0-10"
+    }
+  ],
+  "metadata": {
+    "account_name": "prod",
+    "scan_type": "OpenSSF",
+    "aggregate_score": "4.8",
+    "results": [
+      {
+        "score": 10,
+        "name": "Binary-Artifacts"
+      },
+      {
+        "score": 6,
+        "name": "Branch-Protection"
+      }
+    ]
+  }
+}
