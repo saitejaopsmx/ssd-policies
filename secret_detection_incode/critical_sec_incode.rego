@@ -10,8 +10,9 @@ request = {
 }
 
 response = http.send(request)
-results := [input.Results[i].Secrets[j].Title | input.Results[i].Secrets[j].Severity == "CRITICAL"]
+results := [response.Results[i].Secrets[j].Title | response.Results[i].Secrets[j].Severity == "CRITICAL"]
 counter = count(results)
+
 deny[msg]{
 
   counter != 0
