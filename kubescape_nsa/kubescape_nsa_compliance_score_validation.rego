@@ -6,9 +6,10 @@ max_threshold_str := split(condition_value, "-")[1]
 min_threshold := to_number(min_threshold_str)
 max_threshold := to_number(max_threshold_str)
 
-deny[msg] {
+deny[{"alertMsg":msg, "suggestions": sugg, "error": ""}] {
   score := input.metadata.compliance_score
   score > min_threshold
   score <= max_threshold
-  msg := sprintf("%v scan failed with score:%v on cluster %v.", [input.metadata.scan_type, score, input.metadata.account_name])
+  msg := sprintf("%v Scan failed for cluster %v as Compliance Score was found to be %v which is below threshold %v.", [input.metadata.scan_type, input.metadata.account_name, score, max_threshold])
+  sugg := sprintf("Implement best practices as mentioned in %v to improve overall compliance score.", [input.metadata.references])
 }
