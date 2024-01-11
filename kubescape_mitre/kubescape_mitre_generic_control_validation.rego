@@ -1,10 +1,12 @@
 package opsmx
 import future.keywords.in
 
-policy_name = input.conditions[0].condition_name
-control_id = split(policy_name, " -")[0]
-
-deny[msg] {
+policy = input.conditions[0].condition_name
+control_id = split(policy, " -")[0]
+sugg = [input.metadata.suggestions[i].suggestion | lower(input.metadata.suggestions[i].policy_name) == lower(policy)]
+suggestion := concat(",\n", [sugg[0], "References: ", input.metadata.references])
+  
+deny[{"alertMsg":msg, "suggestion":suggestion, "error":""}] {
   input.metadata.results[i].control_id == control_id
   control_struct = input.metadata.results[i]
   failed_resources = control_struct.failed_resources
