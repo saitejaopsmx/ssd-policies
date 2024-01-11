@@ -21,8 +21,6 @@ raw_body = response.raw_body
 
 parsed_body = json.unmarshal(raw_body)
 
-message = parsed_body.message
-
 license_check = response.body.license
 
 allow {
@@ -40,7 +38,7 @@ deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 401
   msg := ""
   sugg := "Please provide the Appropriate Git Token for the User"
-  error := sprintf("%s %v", [message,status])
+  error := sprintf("%s %v", [parsed_body.message,response.status])
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
