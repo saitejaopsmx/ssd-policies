@@ -21,8 +21,6 @@ raw_body = response.raw_body
 
 parsed_body = json.unmarshal(raw_body)
 
-message = parsed_body.message
-
 repo_access_control = response.body.visibility
 
 allow {
@@ -31,28 +29,28 @@ allow {
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 404
-  msg := "Repo not found"
-  sugg := "Repo name is incorrect,Please provide the appropriate repo name"
-  error := ""
+  msg := ""
+  sugg := "Please provide the appropriate repo name"
+  error := "Repo name or Organisation is incorrect"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 401
-  msg := sprintf("Authentication failed for the repo with the error %s", [message])
-  sugg := "Incorrect git credentails of the user"
-  error := ""
+  msg := ""
+  sugg := "Please provide the Appropriate Git Token for the User"
+  error := sprintf("%s %v", [parsed_body.message,response.status])
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 500
   msg := "Internal Server Error"
-  sugg := "GitHub is not reachable"
-  error := ""
+  sugg := ""
+  error := "GitHub is not reachable"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   repo_access_control = "public"
-  msg := sprintf("Safeguard sensitive information by making %v Github repo private", [input.metadata.github_repo])
-  sugg := "Change the repo to private"
+  msg := sprintf("GitHub repo is public %v", [input.metadata.github_repo])
+  sugg := sprintf("Safeguard sensitive information by making %v Github repo private", [input.metadata.github_repo])
   error := ""
 }

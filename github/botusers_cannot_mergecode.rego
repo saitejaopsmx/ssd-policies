@@ -21,10 +21,6 @@ raw_body = response.raw_body
 
 parsed_body = json.unmarshal(raw_body)
 
-message = parsed_body.message
-
-result = response.body
-
 alllogins = {user |
     some i
     user = result[i];
@@ -40,29 +36,29 @@ allow {
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 404
-  msg := "Repo name or Organisation is incorrect"
-  sugg := "Please provide the appropriate details"
-  error := ""
+  msg := ""
+  sugg := "Please provide the appropriate repo name"
+  error := "Repo name or Organisation is incorrect"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 401
-  msg := sprintf("Authentication failed for the repo with the error %s", [message])
-  sugg := "Incorrect git credentails of the user"
-  error := ""
+  msg := ""
+  sugg := "Please provide the Appropriate Git Token for the User"
+  error := sprintf("%s %v", [parsed_body.message,response.status])
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 500
   msg := "Internal Server Error"
-  sugg := "GitHub is not reachable"
-  error := ""
+  sugg := ""
+  error := "GitHub is not reachable"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   user = alllogins[_]
   user.login == bot_users[user.login]
   msg = sprintf("Github users %v cannot merge the code", [user.login])
-  sugg := "Please remove the user from the Organisation since he is bot user"
+  sugg := sprintf("Adhere to the company policy and revoke admin access of bot user for %v",[user.login])]
   error := ""
 }

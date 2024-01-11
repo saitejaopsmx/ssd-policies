@@ -19,7 +19,9 @@ response = http.send(request)
 
 delete_branch = response.body.allow_deletions.enabled
 
-deny[msg]{
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   delete_branch = false
   msg := sprintf("Github repo %v of branch %v is having policy and branch cannot be deleted", [input.metadata.github_repo,input.metadata.branch])
+  sugg := sprintf("Disable branch deletion in %s Github repo to align with the company's policy", [input.metadata.github_repo])
+  error := ""
 }
