@@ -32,28 +32,28 @@ allow {
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 404
-  msg := "Repo name or Organisation is incorrect"
-  sugg := "Please provide the appropriate details"
-  error := ""
+  msg := ""
+  sugg := "Please provide the appropriate repo name"
+  error := "Repo name or Organisation is incorrect"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 401
-  msg := sprintf("Authentication failed for the repo with the error %s", [message])
-  sugg := "Incorrect git credentails of the user"
-  error := ""
+  msg := ""
+  sugg := "Please provide the Appropriate Git Token for the User"
+  error := sprintf("%s %v", [message,status])
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 500
   msg := "Internal Server Error"
-  sugg := "GitHub is not reachable"
-  error := ""
+  sugg := ""
+  error := "GitHub is not reachable"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   mfa_enabled = null
   msg := sprintf("Github Organisation %v doesn't have the mfa enabled", [input.metadata.github_org])
-  sugg := "Please enable the mfa"
+  sugg := sprintf("Adhere to the company policy by enabling 2FA for %s",[input.metadata.github_org])
   error := ""
 }

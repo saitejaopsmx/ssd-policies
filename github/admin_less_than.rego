@@ -23,6 +23,8 @@ parsed_body = json.unmarshal(raw_body)
 
 message = parsed_body.message
 
+status = response.status
+
 responsesplit = response.body
 
 admins = {user |
@@ -41,7 +43,7 @@ total = {user |
 
 total_users = count(total)
 
-admin_percentage = admin_users / total_users
+admin_percentage = admin_users / total_users * 100
 
 allow {
   response.status_code = 200
@@ -49,28 +51,28 @@ allow {
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 404
-  msg := "Repo name or Organisation is incorrect"
-  sugg := "Please provide the appropriate details"
-  error := ""
+  msg := ""
+  sugg := "Please provide the appropriate repo name"
+  error := "Repo name or Organisation is incorrect"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 401
-  msg := sprintf("Authentication failed for the repo with the error %s", [message])
-  sugg := "Incorrect git credentails of the user"
-  error := ""
+  msg := ""
+  sugg := "Please provide the Appropriate Git Token for the User"
+  error := sprintf("%s %v", [message,status])
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 500
   msg := "Internal Server Error"
-  sugg := "GitHub is not reachable"
-  error := ""
+  sugg := ""
+  error := "GitHub is not reachable"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
-  admin_percentage > 0.05
+  admin_percentage > input.conditions[0].condition_value
   msg := sprintf("More than 5 percentage of total collaborators of %v github repository have admin access", [input.metadata.github_repo])
-  sugg := "Please remove some of the users from the collaborators"
+  sugg := sprintf("Adhere to the company policy and revoke admin access to some users of the repo %v", [input.metadata.github_repo])
   error := ""
 }

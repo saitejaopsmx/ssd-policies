@@ -36,25 +36,6 @@ response_result = response.body
 
 outside_collaboraters_result = collaboraters_response.body
 
-#outside_users = {user |
-#    some i
-#    user = collaborators_response.body[i];
-#    user.type == "User"
-#}
-
-#repo_users = {user |
-#    some i
-#    user = repo_response.body[i];
-#    user.type == "User"
-#}
-
-#deny[msg] {
-#    outside_user = outside_users[_]
-#    repo_user = repo_users[_]
-#    outside_user.login == repo_user.login
-#    msg = sprintf("Git repo is accessed by '%v' which is not allowed.", [outside_user.login])
-#}
-
 outside_users = {outsideuser |
     some i
     outsideuser = outside_collaboraters_result[i];
@@ -67,9 +48,11 @@ repo_users = {repouser |
     repouser.type == "User"
 }
 
-deny[msg] {
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
     outsideuser = outside_users[_]
     repouser = repo_users[_]
     outsideuser.login == repouser.login
     msg = sprintf("Git repo %s is accessed by outside collaborator user %v", [input.metadata.github_repo,outsideuser.login])
+    sugg := sprintf("Adhere to the company policy and revoke access of non-organization members for %s repository",[outsideuser.login])
+    error := ""
 }

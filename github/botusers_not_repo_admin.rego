@@ -39,29 +39,29 @@ allow {
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 404
-  msg := "Repo name or Organisation is incorrect"
-  sugg := "Please provide the appropriate details"
-  error := ""
+  msg := ""
+  sugg := "Please provide the appropriate repo name"
+  error := "Repo name or Organisation is incorrect"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 401
-  msg := sprintf("Authentication failed for the repo with the error %s", [message])
-  sugg := "Incorrect git credentails of the user"
-  error := ""
+  msg := ""
+  sugg := "Please provide the Appropriate Git Token for the User"
+  error := sprintf("%s %v", [message,status])
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 500
   msg := "Internal Server Error"
-  sugg := "GitHub is not reachable"
-  error := ""
+  sugg := ""
+  error := "GitHub is not reachable"
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   user = admins[_]
   user.login == bot_users[user.login]
-  msg = sprintf("Git repo is owned by unknown user %s", [user.login])
-  sugg := "Please remove that user from the organisation"
+  msg = sprintf("Git repo is owned by bot user %s", [user.login])
+  sugg := sprintf("Adhere to the company policy and revoke access of bot user for %s Organization", [user.login])
   error := ""
 }
