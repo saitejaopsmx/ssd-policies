@@ -17,9 +17,44 @@ request = {
 
 response = http.send(request)
 
+raw_body = response.raw_body
+
+parsed_body = json.unmarshal(raw_body)
+
+message = parsed_body.message
+
+status = response.status
+
 #sbom_check = response.body.status_code
 
-deny[msg] {
-    response.status_code != 200
-    msg := sprintf("Failed to retrieve SBOM from GitHub repository %v", [input.metadata.github_repo])
+allow {
+  response.status_code = 200
+}
+
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}] {
+    response.status_code = 404
+    msg := ""
+    sugg := "Please provide the appropriate repo name"
+    error := "Repo name or Organisation is incorrect"
+}
+
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}] {
+    response.status_code = 401
+    msg := ""
+    sugg := "Please provide the Appropriate Git Token for the User"
+    error := sprintf("%s %v", [message, status])
+}
+
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}] {
+    response.status_code = 500
+    msg := "Internal Server Error"
+    sugg := ""
+    error := "GitHub is not reachable"
+}
+
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}] {
+    parsed_body.sbom = "" 
+    msg := sprintf("The GitHub repository %v isn't tied to any organization, hence 'Centralized package manager settings' Policy cannot be validated", [input.metadata.github_repo])
+    sugg := "Please add some packages in the GitHub"
+    error := ""
 }
