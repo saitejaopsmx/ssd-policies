@@ -30,8 +30,8 @@ allow {
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 404
   msg := ""
-  sugg := "Please provide the appropriate repo name"
-  error := "Repo name or Organisation is incorrect"
+  sugg := "Kindly provide the accurate repository name, organization, and branch details"
+  error := sprintf("%v %v",[response.status_code,response.body.message])
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
