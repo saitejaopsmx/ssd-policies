@@ -55,7 +55,7 @@ RequiredReviewers = branch_protect.body.required_pull_request_reviews.required_a
 
 AllowForcePushes = branch_protect.body.allow_force_pushes.enabled
 
-#AllowDeletions = branch_response.body.allow_deletions.enabled
+AllowDeletions = branch_response.body.allow_deletions.enabled
 
 RequiredSignatures = branch_protect.body.required_signatures.enabled
 
@@ -64,52 +64,72 @@ EnforceAdmins = branch_protect.body.enforce_admins.enabled
 RequiredStatusCheck = branch_protect.body.required_status_checks.strict
 
 
-deny[msg]{
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   branch_check = " "
-  msg := sprintf("Github does not have any branch", [input.metadata.github_repo])
-}
+  msg := "Github does not have any branch"
+  sugg := "Please create a branch"
+  error := ""
+} 
 
-deny[msg]{
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   AllowAutoMerge = true
-  msg := sprintf("Github repo %s has allow automatic merge enabled, Please disable it", [input.metadata.github_repo])
+  msg := sprintf("The Auto Merge is enabled for the %s owner %s repo", [input.metadata.github_repo, input.metadata.default_branch])
+  sugg := "Please disable the Auto Merge"
+  error := ""
 }
 
-deny[msg]{
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   delete_branch_on_merge = true
-  msg := sprintf("Deleting the branch after merge is enabled for the repo %s, Please disable it", [input.metadata.github_repo])
+  msg := "The branch protection policy that allows branch deletion is enabled."
+  sugg := sprintf("Please disable the branch deletion of branch %s of repo %s", [input.metadata.default_branch,input.metadata.github_repo])
+  error := ""
 }
-	
-deny[msg]{
+
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   branch_protected = false
   msg := sprintf("Github repo %v and branch %v is not protected", [input.metadata.github_repo, input.metadata.default_branch])
+  sugg := sprintf("Make sure branch %v of %v repo has some branch policies", [input.metadata.github_repo,input.metadata.default_branch])
+  error := ""
 }
 
-deny[msg]{
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   RequiredReviewers = 0
-  msg := sprintf("Atleast 1 reviewer is required for merging the repo %s", [input.metadata.github_repo])
+  msg := "The branch protection policy that mandates the minimum review for branch protection has been deactivated."
+  sugg := sprintf("Activate branch protection: pull request and minimum 1 approval before merging for branch %s of %s repo",[input.metadata.default_branch,input.metadata.github_repo])
+  error := ""
 }
 
-deny[msg]{
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   AllowForcePushes = true
-  msg := sprintf("Force push is enabled for the repo %s", [input.metadata.github_repo])
+  msg := "The branch protection policy that allows force pushes is enabled."
+  sugg := sprintf("Please disable force push of branch %v of repo %v", [input.metadata.default_branch,input.metadata.github_repo])
+  error := ""
 }
 
-#deny[msg]{
-#  AllowDeletions = true
-#  msg := sprintf("Deleting the branch after merge is enabled for the repo %s, Please disable it", [input.metadata.github_repo])
-#}
-
-deny[msg]{
-  RequiredSignatures = false
-  msg := sprintf("Required Signatures is disabled for the repo %s, Please enable it", [input.metadata.github_repo])
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
+  AllowDeletions = true
+  msg := "The branch protection policy that allows branch deletion is enabled."
+  sugg := sprintf("Please disable the branch deletion of branch %v of repo %v",[input.metadata.default_branch,input.metadata.github_repo])
+  error := ""
 }
 
-deny[msg]{
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
+  RequiredSignatures = true
+  msg := "The branch protection policy that requires signature is disabled."
+  sugg := sprintf("Please activate the mandatory GitHub signature policy for branch %v signatures of %v repo",[input.metadata.default_branch,input.metadata.github_repo])
+  error := ""
+}
+
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   EnforceAdmins = true
-  msg := sprintf("Enforce Admins is enabled for the Github repo %s, Please disable it", [input.metadata.github_repo])
+  msg := sprintf("The branch protection policy that enforces status checks for repository administrators is disabled", [input.metadata.github_repo])
+  sugg := sprintf("Please activate the branch protection policy, don't by pass status checks for repository administrators of branch %s of %s repo",[input.metadata.default_branch,input.metadata.github_repo])
+  error := ""
 }
 
-deny[msg]{
-  RequiredStatusCheck = false
-  msg := sprintf("The branch protection policy that requires status check is disabled for the repo %s, Please enable it", [input.metadata.github_repo])
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
+  RequiredStatusCheck = true
+  msg := sprintf("The branch protection policy that requires status check is disabled for the repo %s", [input.metadata.github_repo])
+  sugg := sprintf("Please activate the branch protection policy, requiring a need to be up-to-date with the base branch before merging for branch %s of %s repo",[input.metadata.default_branch,input.metadata.github_repo])
+  error := ""
 }
