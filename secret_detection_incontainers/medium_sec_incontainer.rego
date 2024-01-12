@@ -10,6 +10,17 @@ request = {
 }
 
 response = http.send(request)
+
+}
+
+deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
+  response.status_code = 500
+  msg := "imageScanResult.json file is not available in tool-chain service or file name is wrong"
+  sugg := ""
+  error := "Internal Server Error"
+}
+
+
 results := [response.Results[i].Secrets[j].Title | response.Results[i].Secrets[j].Severity == "MEDIUM"]
 counter = count(results)
 deny[msg]{
