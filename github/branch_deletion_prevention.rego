@@ -3,7 +3,7 @@ package opsmx
 default allow = false
 
 request_components = [input.metadata.rest_url, "repos", input.metadata.github_org, input.metadata.github_repo,"branches",input.metadata.branch,"protection"]
-request_url = concat("/", request_components)
+request_url = concat("/",request_components)
 
 token = input.metadata.github_access_token
 
@@ -16,12 +16,15 @@ request = {
 }
 
 response = http.send(request)
+
 raw_body = response.raw_body
+
 parsed_body = json.unmarshal(raw_body)
 
 allow {
   response.status_code = 200
 }
+
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
   response.status_code = 404
   msg := ""
@@ -44,8 +47,9 @@ deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
 }
 
 deny[{"alertMsg": msg, "suggestion": sugg, "error": error}]{
-  response.body.allow_deletions.enabled = true
-  msg := sprintf("Github repo %v is having policy and branch cannot be deleted", [input.metadata.github_repo])
-  sugg := sprintf("Disable branch deletion in %s Github repo to align with the company's policy", [input.metadata.github_repo])
+  response.body.required_pull_request_reviews = ""
+  response.body.required_pull_request_reviews.require_code_owner_reviews = true
+  msg := sprintf("Github repo %v of branch %v is not protected", [input.metadata.github_repo, input.metadata.default_branch])
+  sugg := sprintf("Adhere to the company policy by enforcing Code Owner Reviews for %s Github repo",[input.metadata.github_repo])
   error := ""
 }
